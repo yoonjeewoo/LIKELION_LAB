@@ -1,0 +1,29 @@
+
+<div class="container">
+	<form action="/home/writing" method="POST">
+	<p>
+	<input type="text" name="title" class="title" placeholder="제목을 쓰세요">
+	</p>
+                
+    <p>
+    <textarea rows="30" name="content" cols="100" placeholder="내용을 쓰세용">
+    	
+    </textarea>
+    <p>
+    <input type="submit">
+ 	</form>
+	<table class="table">
+	<tr>
+		<th>제목</th>
+		<th>내용</th>
+	</tr>
+	
+ 	<% @memos.each do |m| %>
+ 	<tr>
+ 		<td><%=m.title %></td>
+ 		<td><%=m.content %></td>
+	</tr>
+	<% end %>
+	
+	</table>
+</div>

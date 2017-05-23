@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>아침 점심 저녁 메뉴추천</title>
+    <!-- Bootstrap core CSS -->
+    <link href="assets/stylesheets/custom.css" rel="stylesheet">
+    <link href="assets/stylesheets/animate.css" rel="stylesheet">
+  </head>
+  <body>
+      <header class="header">
+        <div class="container">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">Menu Recommendation</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <button type="submit" class="btn btn-default navbar-right" data-toggle="modal" data-target="#myModal">더보기</button>
+                <button type="submit" class="btn btn-default navbar-right  margin-right-10" onclick="myFunction()">새로고침</button>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+          <h2>Calories for a Day<br><span id="counter"></span> / 2,400</h2>
+        </div>
+        <script>
+          function myFunction() {
+            location.reload();
+          }
+        </script>
+        <script>
+          function numberCounter(target_frame, target_number) {
+            this.count = 0; this.diff = 0;
+            this.target_count = parseInt(target_number);
+            this.target_frame = document.getElementById(target_frame);
+            this.timer = null;
+            this.counter();
+          };
+          numberCounter.prototype.counter = function() {
+              var self = this;
+              this.diff = this.target_count - this.count;
+              if(this.diff > 0) {
+                self.count += Math.ceil(this.diff / 5);
+              }
+    
+             this.target_frame.innerHTML = this.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+             if(this.count < this.target_count) {
+                this.timer = setTimeout(function() { self.counter(); }, 20);
+             } else {
+                clearTimeout(this.timer);
+             }
+        };
+        new numberCounter("counter", <%=  @total %>);
+
+        </script>
+      </header>
+      <script>
+        var cal = <%= @total %>
+        if (cal <= 2400 && cal >= 2000) {
+          $("span").css("color", "#2ecc71");
+        }else if(cal < 2000 && cal >= 1600) {
+          $("span").css("color", "#f1c40f");
+        }else {
+          $("span").css("color", "#e74c3c");
+        }
+      </script>
+      <div class="container">
+        <section class="foodlist">
+          <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+          <table class="table table-bordered bounceInUp animated">
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            <tr>
+              <% for i in 0..2 %>
+              <td><%= @food[0][i] %></td>
+              <td><%= @food[1][i] %></td>
+            </tr>
+            <% end %>
+          </table>
+          </div>
+          </div>
+        </section>
+        <hr>
+         <section class="breakfast">
+            <h2>Breakfast</h2>
+            <h3>Calories for Breakfast : <%=@breakfast%></h3>
+            <div class="row">
+              <% @breakfast_list.each do |food| %>
+              <div class="col-sm-6 col-md-4">
+                  <div class="thumbnail">
+                    <%= image_tag(food + ".jpeg") %>
+                    <div class="caption">
+                      <h3><%= food %></h3>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <hr>
+        <section class="lunch">
+            <h2>Lunch</h2>
+            <h3>Calories for Lunch : <%=@lunch%></h3>
+            <div class="row">
+              <% @lunch_list.each do |food| %>
+              <div class="col-sm-6 col-md-4">
+                  <div class="thumbnail">
+                    <%= image_tag(food + ".jpeg") %>
+                    <div class="caption">
+                      <h3><%= food %></h3>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+        </section>
+        <hr>
+        <section class="dinner">
+            <h2>Dinner</h2>
+            <h3>Calories for Dinner : <%=@dinner%></h3>
+            <div class="row">
+              <% @dinner_list.each do |food| %>
+              <div class="col-sm-6 col-md-4">
+                  <div class="thumbnail">
+                    <%= image_tag(food + ".jpeg") %>
+                    <div class="caption">
+                      <h3><%= food %></h3>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+        </section>
+        </div>
+  </body>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Food Database</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover">
+          
+          <thead>
+            <tr>
+            <th rowspan="2">Total</th>
+            <th colspan="3">Breakfast</th>
+            <th colspan="3">Lunch</th>
+            <th colspan="3">Dinner</th>
+          </tr>
+          <tr>
+            <th>Food1</th>
+            <th>Food2</th>
+            <th>Food3</th>
+            <th>Food1</th>
+            <th>Food2</th>
+            <th>Food3</th>
+            <th>Food1</th>
+            <th>Food2</th>
+            <th>Food3</th>
+          </tr>
+          </thead>
+        <% @food_database.each do |f| %>
+            <tr>
+            <td><%= f.breakfast + f.lunch + f.dinner %></td>
+            <% f.breakfast_food.split("/").each do |e| %>
+            <td><%= e %></td>
+            <% end %>
+            <% f.lunch_food.split("/").each do |e| %>
+            <td><%= e %></td>
+            <% end %>
+            
+            <% f.dinner_food.split("/").each do |e| %>
+            <td><%= e %></td>
+            <% end %>
+            
+            </tr>
+        <% end %>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</html>
+
+
