@@ -1,0 +1,14 @@
+<div class="container">
+	<h1>지난 게시물</h1>
+	<hr>
+	
+	<% @posts.each do |post| %>
+	<h4>제목 : <%= post.title %></h4>
+	<h4>내용 : <%= post.content %></h4>
+	<a href="/update_view/<%= post.id %>">[수정]</a>
+	<a href="/destroy/<%= post.id %>">[삭제]</a>
+	<hr>
+	<% end %>
+	
+	<h3><a href="/">게시판 글쓰러가기</a></h3>
+</div>
